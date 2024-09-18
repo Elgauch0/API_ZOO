@@ -18,24 +18,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups("user:read")]
     private ?int $id = null;
 
 
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups("user:read")]
+    #[Groups("user:read", "user:create")]
     private ?string $email = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups("user:read")]
+    #[Groups("user:read", "user:create")]
     private ?string $nom = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups("user:read")]
+    #[Groups("user:read", "user:create")]
     private ?string $prenom = null;
 
     #[ORM\Column]
+    #[Groups("user:create")]
     private ?string $password = null;
 
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users')]
@@ -105,7 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
+    #[Groups("user:read")]
     public function getRoles(): array
     {
         $roles = $this->userRoles->map(function (Role $role) {
@@ -117,6 +117,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return array_unique($roles);
     }
+
 
     public function addUserRole(Role $userRole): static
     {
