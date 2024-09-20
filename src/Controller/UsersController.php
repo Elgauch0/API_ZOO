@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Role;
 use App\Entity\User;
-use Psr\Log\LoggerInterface;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +14,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class AdminController extends AbstractController
+
+#[Route('/api')]
+class UsersController extends AbstractController
 {
     // injection dependancies so the code stay clean and readbal----------------------------------->
     private $serializer;
@@ -28,7 +29,7 @@ class AdminController extends AbstractController
         $this->passwordHasher = $passwordHasher;
     }
     //All users-------------------------------------------------------------------------------->
-    #[Route('api/users', name: 'AllUsers', methods: ['GET'])]
+    #[Route('/users', name: 'AllUsers', methods: ['GET'])]
     public function getAllUsers(UserRepository $RepoUser): JsonResponse
     {
 
@@ -38,18 +39,15 @@ class AdminController extends AbstractController
     }
 
     //SHow a User -------------------------------------------------------------------------------->
-    #[Route('/api/Users/{id}', name: "ShowUser", requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route('/users/{id}', name: "ShowUser", requirements: ['id' => '\d+'], methods: ['GET'])]
     public function ShowUser(User $user): JsonResponse
     {
-        try {
-            $jsonUser = $this->serializer->serialize($user, 'json', ['groups' => 'user:read']);
-            return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'An error occurred while serializing the user data.'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+
+        $jsonUser = $this->serializer->serialize($user, 'json', ['groups' => 'user:read']);
+        return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
     }
     //Delete a  User -------------------------------------------------------------------------------->
-    #[Route('/api/users/{id}', name: "DeleteUser", requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    #[Route('/users/{id}', name: "DeleteUser", requirements: ['id' => '\d+'], methods: ['DELETE'])]
     public function SuppUser(User $user): JsonResponse
     {
         $this->em->remove($user);
@@ -57,7 +55,7 @@ class AdminController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
     //Add a  User -------------------------------------------------------------------------------->
-    #[Route('/api/add', name: "AddUser", methods: ['POST'])]
+    #[Route('/users/add', name: "AddUser", methods: ['POST'])]
     public function AddUser(Request $request): JsonResponse
     {
         $user = $this->serializer->deserialize($request->getContent(), User::class, 'json');

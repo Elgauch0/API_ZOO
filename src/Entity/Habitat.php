@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\HabitatRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\HabitatRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: HabitatRepository::class)]
 class Habitat
@@ -16,18 +17,21 @@ class Habitat
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups("habitat:read")]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups("habitat:read")]
     private ?string $description = null;
 
     /**
      * @var Collection<int, Animal>
      */
     #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'Habitat')]
+
     private Collection $animals;
 
     public function __construct()
@@ -79,6 +83,8 @@ class Habitat
     /**
      * @return Collection<int, Animal>
      */
+
+    #[Groups("habitat:read")]
     public function getAnimals(): Collection
     {
         return $this->animals;
