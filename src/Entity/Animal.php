@@ -17,13 +17,16 @@ class Animal
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(name: 'prenom', length: 50)]
+    #[Groups("animal:read", "animal:write")]
     private ?string $Prenom = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups("animal:read", "animal:write")]
     private ?string $race = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups("animal:read", "animal:write")]
     private ?string $image = null;
 
     /**
@@ -33,6 +36,7 @@ class Animal
     private Collection $rapporVeterinaires;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
+    #[Groups("animal:write")]
     private ?Habitat $Habitat = null;
 
     public function __construct()
@@ -49,7 +53,6 @@ class Animal
     {
         return $this->Prenom;
     }
-
     public function setPrenom(string $Prenom): static
     {
         $this->Prenom = $Prenom;
@@ -61,7 +64,6 @@ class Animal
     {
         return $this->race;
     }
-
     public function setRace(string $race): static
     {
         $this->race = $race;
@@ -73,7 +75,6 @@ class Animal
     {
         return $this->image;
     }
-
     public function setImage(?string $image): static
     {
         $this->image = $image;
@@ -115,7 +116,6 @@ class Animal
     {
         return $this->Habitat;
     }
-
     public function setHabitat(?Habitat $Habitat): static
     {
         $this->Habitat = $Habitat;

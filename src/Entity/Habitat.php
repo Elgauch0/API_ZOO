@@ -43,7 +43,7 @@ class Habitat
     {
         return $this->id;
     }
-
+    #[Groups("animal:read")]
     public function getNom(): ?string
     {
         return $this->nom;

@@ -47,7 +47,7 @@ class HabitatController extends AbstractController
         $this->em->persist($habitat);
         $this->em->flush();
 
-        return new JsonResponse(['status' => 'Habitat updated!'], JsonResponse::HTTP_OK);
+        return new JsonResponse(['status' => 'Habitat created!'], JsonResponse::HTTP_OK);
     }
 
     #[Route('/habitats/{id}', name: 'Delete_habitat', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
