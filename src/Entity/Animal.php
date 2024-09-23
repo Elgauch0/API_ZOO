@@ -5,7 +5,8 @@ namespace App\Entity;
 use App\Repository\AnimalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
+
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,6 +16,7 @@ class Animal
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("rapportVet:read")]
     private ?int $id = null;
 
     #[ORM\Column(name: 'prenom', length: 50)]
@@ -22,7 +24,7 @@ class Animal
     private ?string $Prenom = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups("animal:read", "animal:write")]
+    #[Groups("rapportVet:read", "animal:read", "animal:write")]
     private ?string $race = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -48,7 +50,7 @@ class Animal
     {
         return $this->id;
     }
-    #[Groups("habitat:read")]
+
     public function getPrenom(): ?string
     {
         return $this->Prenom;
@@ -59,7 +61,7 @@ class Animal
 
         return $this;
     }
-    #[Groups("habitat:read")]
+
     public function getRace(): ?string
     {
         return $this->race;
