@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
-
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('api/rapports')]
 class RapportVetController extends AbstractController
@@ -39,7 +39,7 @@ class RapportVetController extends AbstractController
     }
 
     #[Route('/add', name: 'add_RapportV', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
-    public function CreatRapport(Request $request, AnimalRepository $animalrepo): JsonResponse
+    public function CreatRapport(Request $request, AnimalRepository $animalrepo, ValidatorInterface $validator): JsonResponse
     {
         $rapport = new RapporVeterinaire();
         $data = json_decode($request->getContent(), true);
@@ -48,6 +48,12 @@ class RapportVetController extends AbstractController
         $rapport->setDate(new \DateTimeImmutable());
         $animal_id = $animalrepo->findOneBy(['id' => $data['animal_id']]);
         $rapport->setRapportsAnimal($animal_id);
+
+        $errors = $validator->validate($rapport);
+        if ($errors->count() > 0) {
+            return new JsonResponse($this->serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
+
         $this->em->persist($rapport);
         $this->em->flush();
         $jsonrapport = $this->serializer->serialize($rapport, 'json', ['groups' => 'rapportVet:write']);

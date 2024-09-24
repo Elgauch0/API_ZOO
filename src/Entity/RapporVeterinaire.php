@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RapporVeterinaireRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RapporVeterinaireRepository::class)]
 class RapporVeterinaire
@@ -16,10 +17,12 @@ class RapporVeterinaire
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank]
     #[Groups("rapportVet:read", "rapportVet:write")]
     private ?string $etat = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank]
     #[Groups("rapportVet:write")]
     private ?string $nourriture = null;
 

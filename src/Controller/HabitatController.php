@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api')]
 class HabitatController extends AbstractController
@@ -41,9 +42,13 @@ class HabitatController extends AbstractController
     }
 
     #[Route('/habitats/add', name: 'Add_Habitat', methods: ['POST'])]
-    public function AddHabitat(Request $request): JsonResponse
+    public function AddHabitat(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $habitat = $this->serializer->deserialize($request->getContent(), Habitat::class, 'json');
+        $errors = $validator->validate($habitat);
+        if ($errors->count() > 0) {
+            throw new JsonResponse($this->serializer->serialize($errors, 'json'), Response::HTTP_BAD_REQUEST, [], true);
+        }
         $this->em->persist($habitat);
         $this->em->flush();
 
@@ -59,9 +64,14 @@ class HabitatController extends AbstractController
     }
 
     #[Route('/habitats/{id}', name: 'Updat_habitat', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]
-    public function EditHabitat(Habitat $habitat, Request $request): JsonResponse
+    public function EditHabitat(Habitat $habitat, Request $request, ValidatorInterface $validator): JsonResponse
     {
         $updatedh = $this->serializer->deserialize($request->getContent(), Habitat::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $habitat]);
+        $errors = $validator->validate($updatedh);
+        if ($errors->count() > 0) {
+            throw new JsonResponse($this->serializer->serialize($errors, 'json'), Response::HTTP_BAD_REQUEST, [], true);
+        }
+
         $this->em->flush();
 
 

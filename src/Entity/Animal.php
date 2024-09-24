@@ -6,6 +6,8 @@ use App\Repository\AnimalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -20,14 +22,17 @@ class Animal
     private ?int $id = null;
 
     #[ORM\Column(name: 'prenom', length: 50)]
-    #[Groups("animal:read", "animal:write")]
+    #[Assert\NotBlank]
+    #[Groups("habitat:read", "animal:read", "animal:write")]
     private ?string $Prenom = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank]
     #[Groups("rapportVet:read", "animal:read", "animal:write")]
     private ?string $race = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank]
     #[Groups("animal:read", "animal:write")]
     private ?string $image = null;
 
@@ -38,6 +43,7 @@ class Animal
     private Collection $rapporVeterinaires;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
+    #[Assert\NotBlank]
     #[Groups("animal:write")]
     private ?Habitat $Habitat = null;
 

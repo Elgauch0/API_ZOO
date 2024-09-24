@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api')]
 class UsersController extends AbstractController
@@ -56,10 +56,16 @@ class UsersController extends AbstractController
     }
     //Add a  User -------------------------------------------------------------------------------->
     #[Route('/users/add', name: "AddUser", methods: ['POST'])]
-    public function AddUser(Request $request): JsonResponse
+    public function AddUser(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $user = $this->serializer->deserialize($request->getContent(), User::class, 'json');
+        // On vérifie les erreurs
+        $errors = $validator->validate($user);
 
+        if ($errors->count() > 0) {
+
+            return new JsonResponse($this->serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
 
         $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
         $user->setPassword($hashedPassword);

@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/animals')]
 class AnimalController extends AbstractController
@@ -52,7 +53,7 @@ class AnimalController extends AbstractController
 
 
     #[Route('/{id}', name: 'Update_animal', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]
-    public function EditAnimal(Animal $animal, Request $request, HabitatRepository $habitarepo): JsonResponse
+    public function EditAnimal(Animal $animal, Request $request, HabitatRepository $habitarepo, ValidatorInterface $validator): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         $animal->setPrenom($data['prenom']);
@@ -65,14 +66,17 @@ class AnimalController extends AbstractController
             return new JsonResponse(['status' => 'Habitat not found'], Response::HTTP_BAD_REQUEST);
         }
 
-
+        $errors = $validator->validate($animal);
+        if ($errors->count() > 0) {
+            throw new JsonResponse($this->serializer->serialize($errors, 'json'), Response::HTTP_BAD_REQUEST, [], true);
+        }
         $this->em->flush();
         return new JsonResponse(null, Response::HTTP_OK, []);
     }
 
 
     #[Route('/add', name: 'Add_animal', methods: ['POST'])]
-    public function AddAnimal(Request $request, HabitatRepository $habitatRepo): JsonResponse
+    public function AddAnimal(Request $request, HabitatRepository $habitatRepo, ValidatorInterface $validator): JsonResponse
     {
         $animal = new Animal();
         $data = json_decode($request->getContent(), true);
@@ -86,6 +90,10 @@ class AnimalController extends AbstractController
             } else {
                 return new JsonResponse(['status' => 'Habitat  not found'], JsonResponse::HTTP_BAD_REQUEST);
             }
+        }
+        $errors = $validator->validate($animal);
+        if ($errors->count() > 0) {
+            throw new JsonResponse($this->serializer->serialize($errors, 'json'), Response::HTTP_BAD_REQUEST, [], true);
         }
 
         $this->em->persist($animal);

@@ -7,6 +7,8 @@ use App\Repository\HabitatRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: HabitatRepository::class)]
 class Habitat
@@ -17,13 +19,16 @@ class Habitat
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank]
     #[Groups("habitat:read")]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank]
     private ?string $image = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     #[Groups("habitat:read")]
     private ?string $description = null;
 
