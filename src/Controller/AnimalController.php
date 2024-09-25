@@ -6,14 +6,15 @@ use App\Entity\Animal;
 use App\Repository\AnimalRepository;
 use App\Repository\HabitatRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/api/animals')]
 class AnimalController extends AbstractController
@@ -44,6 +45,7 @@ class AnimalController extends AbstractController
 
 
     #[Route('/{id}', name: 'Delete_animal', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
+    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
     public function DeleteAnimal(Animal $animal): JsonResponse
     {
         $this->em->remove($animal);
@@ -53,6 +55,7 @@ class AnimalController extends AbstractController
 
 
     #[Route('/{id}', name: 'Update_animal', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]
+    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
     public function EditAnimal(Animal $animal, Request $request, HabitatRepository $habitarepo, ValidatorInterface $validator): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -76,6 +79,7 @@ class AnimalController extends AbstractController
 
 
     #[Route('/add', name: 'Add_animal', methods: ['POST'])]
+    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
     public function AddAnimal(Request $request, HabitatRepository $habitatRepo, ValidatorInterface $validator): JsonResponse
     {
         $animal = new Animal();

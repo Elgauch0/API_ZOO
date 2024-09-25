@@ -5,15 +5,16 @@ namespace App\Controller;
 use App\Entity\Habitat;
 use App\Repository\HabitatRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Requirement\Requirement;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/api')]
 class HabitatController extends AbstractController
@@ -42,6 +43,7 @@ class HabitatController extends AbstractController
     }
 
     #[Route('/habitats/add', name: 'Add_Habitat', methods: ['POST'])]
+    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
     public function AddHabitat(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $habitat = $this->serializer->deserialize($request->getContent(), Habitat::class, 'json');
@@ -56,6 +58,7 @@ class HabitatController extends AbstractController
     }
 
     #[Route('/habitats/{id}', name: 'Delete_habitat', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
+    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
     public function DeleteHabitat(Habitat $habitat): JsonResponse
     {
         $this->em->remove($habitat);
@@ -64,6 +67,7 @@ class HabitatController extends AbstractController
     }
 
     #[Route('/habitats/{id}', name: 'Updat_habitat', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]
+    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
     public function EditHabitat(Habitat $habitat, Request $request, ValidatorInterface $validator): JsonResponse
     {
         $updatedh = $this->serializer->deserialize($request->getContent(), Habitat::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $habitat]);

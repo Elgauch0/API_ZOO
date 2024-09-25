@@ -23,7 +23,7 @@ class Animal
 
     #[ORM\Column(name: 'prenom', length: 50)]
     #[Assert\NotBlank]
-    #[Groups("habitat:read", "animal:read", "animal:write")]
+    #[Groups("animal:read", "habitat:read", "animal:write")]
     private ?string $Prenom = null;
 
     #[ORM\Column(length: 50)]
