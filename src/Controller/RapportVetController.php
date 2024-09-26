@@ -30,7 +30,8 @@ class RapportVetController extends AbstractController
 
 
     #[Route('/', name: 'app_rapports', methods: ['GET'])]
-    #[IsGranted(['ROLE_ADMIN', 'ROLE_VETERINAIRE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_VETERINAIRE')]
     public function GetAllRapportVet(RapporVeterinaireRepository $RapportRepo): JsonResponse
     {
         $rapports = $RapportRepo->findAll();
@@ -76,7 +77,8 @@ class RapportVetController extends AbstractController
 
 
     #[Route('/{id}', name: 'show_Rapport', requirements: ['id' => Requirement::DIGITS], methods: ['GET'])]
-    #[IsGranted(['ROLE_ADMIN', 'ROLE_VETERINAIRE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_VETERINAIRE')]
     public function ShowRapport(RapporVeterinaire $rapporVe): JsonResponse
     {
 

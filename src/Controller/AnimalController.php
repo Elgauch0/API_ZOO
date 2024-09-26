@@ -45,7 +45,8 @@ class AnimalController extends AbstractController
 
 
     #[Route('/{id}', name: 'Delete_animal', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
-    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_EMPLOYE')]
     public function DeleteAnimal(Animal $animal): JsonResponse
     {
         $this->em->remove($animal);
@@ -55,7 +56,8 @@ class AnimalController extends AbstractController
 
 
     #[Route('/{id}', name: 'Update_animal', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]
-    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_EMPLOYE')]
     public function EditAnimal(Animal $animal, Request $request, HabitatRepository $habitarepo, ValidatorInterface $validator): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -79,7 +81,8 @@ class AnimalController extends AbstractController
 
 
     #[Route('/add', name: 'Add_animal', methods: ['POST'])]
-    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_EMPLOYE')]
     public function AddAnimal(Request $request, HabitatRepository $habitatRepo, ValidatorInterface $validator): JsonResponse
     {
         $animal = new Animal();

@@ -43,7 +43,8 @@ class HabitatController extends AbstractController
     }
 
     #[Route('/habitats/add', name: 'Add_Habitat', methods: ['POST'])]
-    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_EMPLOYE')]
     public function AddHabitat(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $habitat = $this->serializer->deserialize($request->getContent(), Habitat::class, 'json');
@@ -58,7 +59,8 @@ class HabitatController extends AbstractController
     }
 
     #[Route('/habitats/{id}', name: 'Delete_habitat', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
-    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_EMPLOYE')]
     public function DeleteHabitat(Habitat $habitat): JsonResponse
     {
         $this->em->remove($habitat);
@@ -67,7 +69,8 @@ class HabitatController extends AbstractController
     }
 
     #[Route('/habitats/{id}', name: 'Updat_habitat', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]
-    #[IsGranted(['ROLE_ADMIN', 'ROLE_EMPLOYE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_EMPLOYE')]
     public function EditHabitat(Habitat $habitat, Request $request, ValidatorInterface $validator): JsonResponse
     {
         $updatedh = $this->serializer->deserialize($request->getContent(), Habitat::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $habitat]);

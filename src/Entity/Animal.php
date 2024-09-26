@@ -23,17 +23,17 @@ class Animal
 
     #[ORM\Column(name: 'prenom', length: 50)]
     #[Assert\NotBlank]
-    #[Groups("animal:read", "habitat:read", "animal:write")]
+    #[Groups(["animal:read", "habitat:read", "animal:write"])]
     private ?string $Prenom = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank]
-    #[Groups("rapportVet:read", "animal:read", "animal:write")]
+    #[Groups(["rapportVet:read", "animal:read", "animal:write"])]
     private ?string $race = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank]
-    #[Groups("animal:read", "animal:write")]
+    #[Groups(["animal:read", "animal:write"])]
     private ?string $image = null;
 
     /**

@@ -18,7 +18,7 @@ class RapporVeterinaire
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank]
-    #[Groups("rapportVet:read", "rapportVet:write")]
+    #[Groups(["rapportVet:read", "rapportVet:write"])]
     private ?string $etat = null;
 
     #[ORM\Column(length: 50)]
@@ -31,7 +31,7 @@ class RapporVeterinaire
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'rapporVeterinaires')]
-    #[Groups("rapportVet:read", "rapportVet:write")]
+    #[Groups(["rapportVet:read", "rapportVet:write"])]
     private ?Animal $Rapports_animal = null;
 
     public function getId(): ?int
