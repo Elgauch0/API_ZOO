@@ -14,6 +14,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 #[Route('/api')]
 class UsersController extends AbstractController
@@ -56,7 +58,7 @@ class UsersController extends AbstractController
     }
     //Add a  User -------------------------------------------------------------------------------->
     #[Route('/users/add', name: "AddUser", methods: ['POST'])]
-    public function AddUser(Request $request, ValidatorInterface $validator): JsonResponse
+    public function AddUser(Request $request, ValidatorInterface $validator, MailerInterface $mailer): JsonResponse
     {
         $user = $this->serializer->deserialize($request->getContent(), User::class, 'json');
         // On vérifie les erreurs
@@ -81,6 +83,14 @@ class UsersController extends AbstractController
         $this->em->persist($user);
         $this->em->flush();
         $jsonUser = $this->serializer->serialize($user, 'json', ['groups' => 'user:create']);
+        //envoie de l 'email   
+        $email = (new Email())
+            ->from('no-reply@zooAdmin.com')
+            ->to($user->getEmail())
+            ->subject('Confirmation de création de compte')
+            ->text('Bonjour ' . $user->getUsername() . ', votre compte a bien été créé.')
+            ->html('<p>Bonjour ' . $user->getUsername() . ',</p><p>Votre compte a bien été créé.</p>');
+        $mailer->send($email);
         return new JsonResponse($jsonUser, Response::HTTP_CREATED, [], true);
     }
 }
