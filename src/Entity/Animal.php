@@ -31,10 +31,6 @@ class Animal
     #[Groups(["rapportVet:read", "animal:read", "animal:write"])]
     private ?string $race = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank]
-    #[Groups(["animal:read", "animal:write"])]
-    private ?string $image = null;
 
     /**
      * @var Collection<int, RapporVeterinaire>
@@ -79,16 +75,7 @@ class Animal
         return $this;
     }
 
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-    public function setImage(?string $image): static
-    {
-        $this->image = $image;
 
-        return $this;
-    }
 
     /**
      * @return Collection<int, RapporVeterinaire>

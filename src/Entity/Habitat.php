@@ -16,6 +16,7 @@ class Habitat
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("habitat:read")]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
@@ -23,9 +24,9 @@ class Habitat
     #[Groups("habitat:read")]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank]
-    private ?string $image = null;
+    // #[ORM\Column(length: 255, nullable: true)]
+    // #[Assert\NotBlank]
+    // private ?string $image = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -61,17 +62,17 @@ class Habitat
         return $this;
     }
 
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
+    // public function getImage(): ?string
+    // {
+    //     return $this->image;
+    // }
 
-    public function setImage(?string $image): static
-    {
-        $this->image = $image;
+    // public function setImage(?string $image): static
+    // {
+    //     $this->image = $image;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getDescription(): ?string
     {
