@@ -63,7 +63,7 @@ class AnimalController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $animal->setPrenom($data['prenom']);
         $animal->setRace($data['race']);
-        $animal->setImage($data['image']);
+
         $habitat = $habitarepo->findOneBy(['id' => $data['habitat_id']]);
         if ($habitat) {
             $animal->setHabitat($habitat);
@@ -89,7 +89,7 @@ class AnimalController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $animal->setPrenom($data['prenom']);
         $animal->setRace($data['race']);
-        $animal->setImage($data['image']);
+
         if (isset($data['habitat_id'])) {
             $habitat = $habitatRepo->findOneBy(['id' => $data['habitat_id']]);
             if ($habitat) {
