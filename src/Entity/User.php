@@ -164,4 +164,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->getUserIdentifier();
     }
+
+
+
+    /**
+     *  {
+     *"username":"Admin@ADMin.com",
+     *"password":"password"
+     * 
+     *}
+     */
 }

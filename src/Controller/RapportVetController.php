@@ -30,7 +30,6 @@ class RapportVetController extends AbstractController
 
 
     #[Route('/', name: 'app_rapports', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
     #[IsGranted('ROLE_VETERINAIRE')]
     public function GetAllRapportVet(RapporVeterinaireRepository $RapportRepo): JsonResponse
     {
